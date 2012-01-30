@@ -53,8 +53,7 @@ class CreateEmployees < ActiveRecord::Migration
 
       t.column   :photo_filename,       :string
       t.column   :photo_content_type,   :string
-      t.column   :photo_data,           :binary,
-        :limit => 5.megabytes
+      t.column   :photo_data,           :binary
 
       t.timestamps
     end
