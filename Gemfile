@@ -1,6 +1,6 @@
 source :rubygems
 
-gem 'rails','2.3.5'
+gem 'rails','2.3.11'
 gem 'i18n','0.4.2'
 gem 'declarative_authorization','0.5.1'
 gem 'searchlogic','2.4.27'
