@@ -1,0 +1,2 @@
+module StudyMaterialHelper
+end
