@@ -1,6 +1,6 @@
 development:
       host: localhost
-      adapter: mysql2
+      adapter: mysql
       database: telm
       port: 3306
       username: root
@@ -8,7 +8,7 @@ development:
 
 test: &test
       host: localhost
-      adapter: mysql2
+      adapter: mysql
       database: telm_test
       port: 3306
       username: root
@@ -16,7 +16,7 @@ test: &test
 
 production:
       host: localhost
-      adapter: mysql2
+      adapter: mysql
       database: telm
       port: 3306
       username: root
