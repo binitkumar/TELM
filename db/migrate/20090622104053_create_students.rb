@@ -35,7 +35,7 @@ class CreateStudents < ActiveRecord::Migration
 
       t.string     :photo_filename
       t.string     :photo_content_type
-      t.binary     :photo_data, :limit => 75.kilobytes
+      t.binary     :photo_data
 
       t.string     :status_description
       t.boolean    :is_active, :default => true
