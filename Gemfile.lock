@@ -30,6 +30,7 @@ GEM
     rake (0.8.7)
     searchlogic (2.4.27)
       activerecord (>= 2.0.0)
+    test-unit (2.4.5)
     win32-open3 (0.3.2-x86-mingw32)
 
 PLATFORMS
@@ -43,4 +44,5 @@ DEPENDENCIES
   rails (= 2.3.5)
   rake (= 0.8.7)
   searchlogic (= 2.4.27)
+  test-unit
   win32-open3
