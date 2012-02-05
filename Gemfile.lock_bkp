@@ -30,6 +30,7 @@ GEM
     rake (0.8.7)
     searchlogic (2.4.27)
       activerecord (>= 2.0.0)
+    test-unit (2.4.5)
     win32-open3 (0.3.2-x86-mingw32)
 
 PLATFORMS
@@ -39,8 +40,9 @@ DEPENDENCIES
   declarative_authorization (= 0.5.1)
   i18n (= 0.4.2)
   mongrel (= 1.1.5)
-  mysql (= 2.8.1)
+  mysql
   rails (= 2.3.5)
   rake (= 0.8.7)
   searchlogic (= 2.4.27)
+  test-unit (= 2.4.5)
   win32-open3
