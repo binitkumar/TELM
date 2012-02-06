@@ -21,4 +21,16 @@ Rails::Initializer.run do |config|
   config.load_paths += Dir["#{RAILS_ROOT}/app/models/*"].find_all { |f| File.stat(f).directory? }
 
   config.plugins = [:paperclip,:all]
+  
+  
+
+config.action_mailer.delivery_method = :smtp 
 end
+require 'smtp_tls'
+ActionMailer::Base.smtp_settings = {   
+	:address => "smtp.gmail.com",   
+	:port => 587,   
+	:user_name => "hbsmailer2012@gmail.com",   
+	:password => "hbsmailer123",   
+	:authentication => :plain 
+}
