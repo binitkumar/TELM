@@ -1,21 +1,3 @@
-#Fedena
-#Copyright 2011 Foradian Technologies Private Limited
-#
-#This product includes software developed at
-#Project Fedena - http://www.projectfedena.org/
-#
-#Licensed under the Apache License, Version 2.0 (the "License");
-#you may not use this file except in compliance with the License.
-#You may obtain a copy of the License at
-#
-#  http://www.apache.org/licenses/LICENSE-2.0
-#
-#Unless required by applicable law or agreed to in writing, software
-#distributed under the License is distributed on an "AS IS" BASIS,
-#WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-#See the License for the specific language governing permissions and
-#limitations under the License.
-
 class EmployeeController < ApplicationController
   before_filter :login_required,:configuration_settings_for_hr
   filter_access_to :all
@@ -24,8 +6,8 @@ class EmployeeController < ApplicationController
   before_filter :limit_employee_profile_access , :only => [:profile,:profile_pdf]
 
   def add_category
-    @categories = EmployeeCategory.find(:all,:order => "name asc",:conditions=>'status = 1')
-    @inactive_categories = EmployeeCategory.find(:all,:conditions=>'status = 0')
+    @categories = EmployeeCategory.find(:all,:order => "name asc",:conditions=>'status = true')
+    @inactive_categories = EmployeeCategory.find(:all,:conditions=>'status = false')
     @category = EmployeeCategory.new(params[:category])
     if request.post? and @category.save
       flash[:notice] = t('flash1')
@@ -43,7 +25,7 @@ class EmployeeController < ApplicationController
           unless @category.status
             position = EmployeePosition.find_all_by_employee_category_id(@category.id)
             position.each do |p|
-              p.update_attributes(:status=> '0')
+              p.update_attributes(:status=> false)
             end
           end
           flash[:notice] = t('flash2')
@@ -71,9 +53,9 @@ class EmployeeController < ApplicationController
   end
 
   def add_position
-    @positions = EmployeePosition.find(:all,:order => "name asc",:conditions=>'status = 1')
-    @inactive_positions = EmployeePosition.find(:all,:order => "name asc",:conditions=>'status = 0')
-    @categories = EmployeeCategory.find(:all,:order => "name asc",:conditions=> 'status = 1')
+    @positions = EmployeePosition.find(:all,:order => "name asc",:conditions=>'status = true')
+    @inactive_positions = EmployeePosition.find(:all,:order => "name asc",:conditions=>'status = false')
+    @categories = EmployeeCategory.find(:all,:order => "name asc",:conditions=> 'status = true')
     @position = EmployeePosition.new(params[:position])
     if request.post? and @position.save
       flash[:notice] = t('flash5')
@@ -149,8 +131,8 @@ class EmployeeController < ApplicationController
   end
 
   def add_grade
-    @grades = EmployeeGrade.find(:all,:order => "name asc",:conditions=>'status = 1')
-    @inactive_grades = EmployeeGrade.find(:all,:order => "name asc",:conditions=>'status = 0')
+    @grades = EmployeeGrade.find(:all,:order => "name asc",:conditions=>'status = true')
+    @inactive_grades = EmployeeGrade.find(:all,:order => "name asc",:conditions=>'status = false')
     @grade = EmployeeGrade.new(params[:grade])
     if request.post? and @grade.save
       flash[:notice] =  t('flash9')
@@ -186,8 +168,8 @@ class EmployeeController < ApplicationController
   end
 
   def add_bank_details
-    @bank_details = BankField.find(:all,:order => "name asc",:conditions=>'status = 1')
-    @inactive_bank_details = BankField.find(:all,:order => "name asc",:conditions=>'status = 0')
+    @bank_details = BankField.find(:all,:order => "name asc",:conditions=>'status = true')
+    @inactive_bank_details = BankField.find(:all,:order => "name asc",:conditions=>'status = false')
     @bank_field = BankField.new(params[:bank_field])
     if request.post? and @bank_field.save
       flash[:notice] =t('flash11')
@@ -216,8 +198,8 @@ class EmployeeController < ApplicationController
   end
 
   def add_additional_details
-    @additional_details = AdditionalField.find(:all,:order => "name asc",:conditions=>'status = 1')
-    @inactive_additional_details = AdditionalField.find(:all,:order => "name asc",:conditions=>'status = 0')
+    @additional_details = AdditionalField.find(:all,:order => "name asc",:conditions=>'status = true')
+    @inactive_additional_details = AdditionalField.find(:all,:order => "name asc",:conditions=>'status = false')
     @additional_field = AdditionalField.new(params[:additional_field])
     if request.post? and @additional_field.save
       flash[:notice] = t('flash13')
@@ -294,7 +276,7 @@ class EmployeeController < ApplicationController
 
   def update_positions
     category = EmployeeCategory.find(params[:category_id])
-    @positions = EmployeePosition.find_all_by_employee_category_id(category.id,:conditions=>'status = 1')
+    @positions = EmployeePosition.find_all_by_employee_category_id(category.id,:conditions=>'status = true')
     render :update do |page|
       page.replace_html 'positions1', :partial => 'positions', :object => @positions
     end

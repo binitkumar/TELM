@@ -1,21 +1,3 @@
-#Fedena
-#Copyright 2011 Foradian Technologies Private Limited
-#
-#This product includes software developed at
-#Project Fedena - http://www.projectfedena.org/
-#
-#Licensed under the Apache License, Version 2.0 (the "License");
-#you may not use this file except in compliance with the License.
-#You may obtain a copy of the License at
-#
-#  http://www.apache.org/licenses/LICENSE-2.0
-#
-#Unless required by applicable law or agreed to in writing, software
-#distributed under the License is distributed on an "AS IS" BASIS,
-#WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-#See the License for the specific language governing permissions and
-#limitations under the License.
-
 class FinanceController < ApplicationController
   before_filter :login_required,:configuration_settings_for_finance
   filter_access_to :all
@@ -30,7 +12,7 @@ class FinanceController < ApplicationController
       @cat_names << "'#{category[:category_name]}'"
     end
     @triggers = FinanceTransactionTrigger.all
-    @categories = FinanceTransactionCategory.find(:all ,:conditions => ["name NOT IN (#{@cat_names.join(',')}) and is_income=1 and deleted=0 "])
+    @categories = FinanceTransactionCategory.find(:all ,:conditions => ["name NOT IN (#{@cat_names.join(',')}) and is_income=true and deleted=false "])
   end
   
   def donation
@@ -714,7 +696,7 @@ class FinanceController < ApplicationController
     render :update do |page|
       if @feeparticulars.update_attributes(params[:finance_fee_particulars])
         @finance_fee_category = FinanceFeeCategory.find(@feeparticulars.finance_fee_category_id)
-        @particulars = FinanceFeeParticulars.paginate(:page => params[:page],:conditions => ["is_deleted = '#{false}' and finance_fee_category_id = '#{@finance_fee_category.id}' "])
+        @particulars = FinanceFeeParticulars.paginate(:page => params[:page],:conditions => ["is_deleted = false and finance_fee_category_id = '#{@finance_fee_category.id}' "])
         page.replace_html 'form-errors', :text => ''
         page << "Modalbox.hide();"
         page.replace_html 'categories', :partial => 'master_particulars_list'
@@ -732,7 +714,7 @@ class FinanceController < ApplicationController
     @feeparticulars = FinanceFeeParticulars.find( params[:id])
     @feeparticulars.update_attributes(:is_deleted => true )
     @finance_fee_category = FinanceFeeCategory.find(@feeparticulars.finance_fee_category_id)
-    @particulars = FinanceFeeParticulars.paginate(:page => params[:page],:conditions => ["is_deleted = '#{false}' and finance_fee_category_id = '#{@finance_fee_category.id}' "])
+    @particulars = FinanceFeeParticulars.paginate(:page => params[:page],:conditions => ["is_deleted = false and finance_fee_category_id = '#{@finance_fee_category.id}' "])
     respond_to do |format|
       format.js { render :action => 'master_category_particulars' }
     end
@@ -741,7 +723,7 @@ class FinanceController < ApplicationController
     @finance_fee_category = FinanceFeeCategory.find(params[:id])
     @finance_fee_category.update_attributes(:is_deleted => true)
     @finance_fee_category.delete_particulars
-    @master_categories = FinanceFeeCategory.find(:all, :conditions =>["is_deleted = '#{false}' and is_master = 1 and batch_id = #{@finance_fee_category.batch_id}"])
+    @master_categories = FinanceFeeCategory.find(:all, :conditions =>["is_deleted = false and is_master = true and batch_id = #{@finance_fee_category.batch_id}"])
     respond_to do |format|
       format.js { render :action => 'master_category_delete' }
     end
@@ -752,7 +734,7 @@ class FinanceController < ApplicationController
       @finance_fee_category = FinanceFeeCategory.new
       @finance_fee_particular = FinanceFeeParticulars.new
       @batches = Batch.find params[:id] unless params[:id] == ""
-      @master_categories = FinanceFeeCategory.find(:all,:conditions=> ["is_deleted = '#{false}' and is_master = 1 and batch_id=?",params[:id]])
+      @master_categories = FinanceFeeCategory.find(:all,:conditions=> ["is_deleted = false and is_master = true and batch_id=?",params[:id]])
       @student_categories = StudentCategory.active
 
       render :update do |page|
@@ -763,7 +745,7 @@ class FinanceController < ApplicationController
 
 
   def fees_particulars_new
-    @fees_categories = FinanceFeeCategory.find(:all ,:conditions=> "is_deleted = 0 and is_master = 1")
+    @fees_categories = FinanceFeeCategory.find(:all ,:conditions=> "is_deleted = false and is_master = true")
     @fees_categories.reject!{|f|f.batch.is_deleted or !f.batch.is_active }
     @student_categories = StudentCategory.active
     @finance_fee_particulars = FinanceFeeParticulars.new
@@ -809,7 +791,7 @@ class FinanceController < ApplicationController
       end
     end
     @finance_fee_category = FinanceFeeCategory.find( @finance_fee_particulars .finance_fee_category_id)
-    @particulars = FinanceFeeParticulars.paginate(:page => params[:page],:conditions => ["is_deleted = '#{false}' and finance_fee_category_id = '#{@finance_fee_category.id}' "])
+    @particulars = FinanceFeeParticulars.paginate(:page => params[:page],:conditions => ["is_deleted = false and finance_fee_category_id = '#{@finance_fee_category.id}' "])
     
   end
 
@@ -929,7 +911,7 @@ class FinanceController < ApplicationController
     @additional_category = FinanceFeeCategory.find(@collection_date.fee_category_id)
     @student_categories = StudentCategory.active
     @finance_fee_particulars = FeeCollectionParticular.new
-    @finance_fee_particulars_list = FeeCollectionParticular.find(:all,:conditions => ["is_deleted = '#{false}' and finance_fee_collection_id = '#{@collection_date.id}'"])
+    @finance_fee_particulars_list = FeeCollectionParticular.find(:all,:conditions => ["is_deleted = false and finance_fee_collection_id = '#{@collection_date.id}'"])
   end
 
   def add_particulars_new
@@ -982,7 +964,7 @@ class FinanceController < ApplicationController
       unless @finance_fee_particulars.save
         @error = true
       else
-        @finance_fee_particulars_list = FeeCollectionParticular.find(:all,:conditions => ["is_deleted = '#{false}' and finance_fee_collection_id = '#{@collection_date.id}'"])
+        @finance_fee_particulars_list = FeeCollectionParticular.find(:all,:conditions => ["is_deleted = false and finance_fee_collection_id = '#{@collection_date.id}'"])
       end
 
     end
@@ -1014,7 +996,7 @@ class FinanceController < ApplicationController
   end
 
   def show_additional_fees_list
-    @additional_categories = FinanceFeeCategory.find(:all,:conditions => ["is_deleted = '#{false}' and is_master = '#{false}' and batch_id=?",params[:id]])
+    @additional_categories = FinanceFeeCategory.find(:all,:conditions => ["is_deleted = false and is_master = false and batch_id=?",params[:id]])
     render :update do |page|
       page.replace_html 'particulars', :partial =>'additional_fees_list'
     end
@@ -1023,7 +1005,7 @@ class FinanceController < ApplicationController
   def additional_particulars
     @additional_category = FinanceFeeCategory.find(params[:id])
     @collection_date = FinanceFeeCollection.find_by_fee_category_id(@additional_category.id)
-    @particulars = FeeCollectionParticular.find(:all,:conditions => ["is_deleted = '#{false}' and finance_fee_collection_id = '#{@collection_date.id}' "])
+    @particulars = FeeCollectionParticular.find(:all,:conditions => ["is_deleted = false and finance_fee_collection_id = '#{@collection_date.id}' "])
   end
 
   def add_particulars_edit
@@ -1036,7 +1018,7 @@ class FinanceController < ApplicationController
       if @finance_fee_particulars.update_attributes(params[:finance_fee_particulars])
         @collection_date = @finance_fee_particulars.finance_fee_collection
         @additional_category =@collection_date.fee_category
-        @particulars = FeeCollectionParticular.paginate(:page => params[:page],:conditions => ["is_deleted = '#{false}' and finance_fee_collection_id = '#{@collection_date.id}' "])
+        @particulars = FeeCollectionParticular.paginate(:page => params[:page],:conditions => ["is_deleted = false and finance_fee_collection_id = '#{@collection_date.id}' "])
         page.replace_html 'form-errors', :text => ''
         page << "Modalbox.hide();"
         page.replace_html 'particulars', :partial => 'additional_particulars_list'
@@ -1053,7 +1035,7 @@ class FinanceController < ApplicationController
     @finance_fee_particulars.update_attributes(:is_deleted => true)
     @collection_date = @finance_fee_particulars.finance_fee_collection
     @additional_category =@collection_date.fee_category
-    @particulars = FeeCollectionParticular.paginate(:page => params[:page],:conditions => ["is_deleted = '#{false}' and finance_fee_collection_id = '#{@collection_date.id}' "])
+    @particulars = FeeCollectionParticular.paginate(:page => params[:page],:conditions => ["is_deleted = false and finance_fee_collection_id = '#{@collection_date.id}' "])
     render :update do |page|
       page.replace_html 'flash_box', :text => "<p class='flash-msg'>#{t('particulars_deleted_successfully')}</p>"
       page.replace_html 'particulars', :partial => 'additional_particulars_list'
@@ -1163,7 +1145,7 @@ class FinanceController < ApplicationController
                 :body => body, :is_read=>false, :is_deleted_by_sender=>false,:is_deleted_by_recipient=>false)
             end
           end
-          @finance_fee_collections = FinanceFeeCollection.all(:conditions => ["is_deleted = '#{false}' and batch_id = '#{@finance_fee_collection.batch_id}'"])
+          @finance_fee_collections = FinanceFeeCollection.all(:conditions => ["is_deleted = false and batch_id = '#{@finance_fee_collection.batch_id}'"])
           page.replace_html 'form-errors', :text => ''
           page << "Modalbox.hide();"
           page.replace_html 'fee_collection_dates', :partial => 'fee_collection_list'
@@ -1178,13 +1160,13 @@ class FinanceController < ApplicationController
         
       end
     end
-    @finance_fee_collections = FinanceFeeCollection.all(:conditions => ["is_deleted = '#{false}' and batch_id = '#{@finance_fee_collection.batch_id}'"])
+    @finance_fee_collections = FinanceFeeCollection.all(:conditions => ["is_deleted = false and batch_id = '#{@finance_fee_collection.batch_id}'"])
   end
 
   def fee_collection_delete
     @finance_fee_collection = FinanceFeeCollection.find params[:id]
     @finance_fee_collection.update_attributes(:is_deleted => true)
-    @finance_fee_collections = FinanceFeeCollection.all(:conditions => ["is_deleted = '#{false}' and batch_id = '#{@finance_fee_collection.batch_id}'"])
+    @finance_fee_collections = FinanceFeeCollection.all(:conditions => ["is_deleted = false and batch_id = '#{@finance_fee_collection.batch_id}'"])
   end
 
   #fees_submission-----------------------------------
