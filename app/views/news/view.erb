@@ -62,13 +62,13 @@
 
   <ul id="comments-list">
     <% @comments.each do |cmnt| %>
-      <%= render :partial => "comment" %>
+      <%= render :partial => "comment",:locals =>{:cmnt=>cmnt } %>
     <% end %>
   </ul>
 
   <h4 id="leave-a-comment"><%= t('leave_comment') %></h4>
 
-  <% form_remote_for :comment, :id => 'comments-form', :url => { :action => 'add_comment' } do |f| %>
+  <% form_for :comment, :id => 'comments-form', :url => { :action => 'add_comment' } do |f| %>
   <div class="comment-content"> <%= f.text_area :content %> </div>
     <%= f.hidden_field :news_id, :value => @news.id %>
     <div id="submit-button"><%= submit_tag '', :value =>"► #{t('submit')}" %></div>

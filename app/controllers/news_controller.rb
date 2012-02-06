@@ -37,6 +37,7 @@ class NewsController < ApplicationController
     @cmnt = NewsComment.new(params[:comment])
     @cmnt.author = current_user
     @cmnt.save
+	redirect_to :controller =>'news', :action=>'view', :id=>@cmnt.news_id
   end
 
   def all
