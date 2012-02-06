@@ -112,8 +112,8 @@ class EmployeeController < ApplicationController
   end
 
   def add_department
-    @departments = EmployeeDepartment.find(:all,:order => "name asc",:conditions=>'status = 1')
-    @inactive_departments = EmployeeDepartment.find(:all,:order => "name asc",:conditions=>'status = 0')
+    @departments = EmployeeDepartment.find(:all,:order => "name asc",:conditions=>'status = true')
+    @inactive_departments = EmployeeDepartment.find(:all,:order => "name asc",:conditions=>'status = false')
     @department = EmployeeDepartment.new(params[:department])
     if request.post? and @department.save
       flash[:notice] =  t('flash7')
