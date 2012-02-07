@@ -16,7 +16,7 @@
 <div class="table">
   <% @batches.each do |b| %>
     <% weekday = Weekday.find_by_batch_id_and_weekday(b.id, @today.wday) if b.has_own_weekday%>
-    <% weekday = Weekday.find(:all,:conditions=>["batch_id is null and weekday = ?", @today.wday]) unless b.has_own_weekday %>
+    <% weekday = Weekday.find(:all,:conditions=>["batch_id is null and weekday = ?", @today.wday.to_s]) unless b.has_own_weekday %>
     <% @timetable = nil %>
     <% @timetable = TimetableEntry.find_all_by_batch_id_and_weekday_id(b.id, weekday.id) unless weekday.blank? %>
     <% unless @timetable.blank? %>
