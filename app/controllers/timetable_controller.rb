@@ -303,7 +303,7 @@ end
 def edit2
   @weekday = ["#{t('sun')}", "#{t('mon')}", "#{t('tue')}", "#{t('wed')}", "#{t('thu')}", "#{t('fri')}", "#{t('sat')}"]
   @errors = {"messages" => []}
-  @batch = Batch.find(params[:id])
+  @batch = Batch.find(params[:id].to_i)
   @timetable = TimetableEntry.find_all_by_batch_id(params[:id])
   @class_timing = ClassTiming.find_all_by_batch_id(@batch.id, :conditions =>[ "is_break = false"], :order =>'start_time ASC')
   if @class_timing.empty?
