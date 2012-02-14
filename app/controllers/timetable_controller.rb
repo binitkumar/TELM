@@ -304,6 +304,9 @@ def edit2
   @weekday = ["#{t('sun')}", "#{t('mon')}", "#{t('tue')}", "#{t('wed')}", "#{t('thu')}", "#{t('fri')}", "#{t('sat')}"]
   @errors = {"messages" => []}
   @batch = Batch.find(params[:id].to_i)
+  puts "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+  puts @batch
+  
   @timetable = TimetableEntry.find_all_by_batch_id(params[:id])
   @class_timing = ClassTiming.find_all_by_batch_id(@batch.id, :conditions =>[ "is_break = false"], :order =>'start_time ASC')
   if @class_timing.empty?
@@ -313,7 +316,13 @@ def edit2
   if @day.empty?
     @day = Weekday.default
   end
+  
   @subjects = Subject.find_all_by_batch_id(@batch.id)
+  puts "###############################################"
+  puts "###############################################"
+  puts "###############################################"
+  puts "###############################################"
+  p @subjects
   ele_sub_group = ElectiveGroup.for_batch(@batch.id)
   @ele_subjects = Array.new
   ele_sub_group.each do |ele_sub|
