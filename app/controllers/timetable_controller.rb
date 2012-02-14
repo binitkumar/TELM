@@ -314,7 +314,7 @@ def edit2
     @day = Weekday.default
   end
   @subjects = Subject.find_all_by_batch_id(@batch.id)
-  ele_sub_group = ElectiveGroup.find_all_by_batch_id(@batch.id)
+  ele_sub_group = ElectiveGroup.for_batch(@batch.id)
   @ele_subjects = Array.new
   ele_sub_group.each do |ele_sub|
 	@ele_subjects.push ele_sub.subjects
