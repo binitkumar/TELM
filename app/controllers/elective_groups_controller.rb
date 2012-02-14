@@ -2,7 +2,7 @@ class ElectiveGroupsController < ApplicationController
   before_filter :pre_load_objects
 
   def index
-    @elective_groups = ElectiveGroup.for_batch(@batch.id, :include => :subjects)
+    @elective_groups = ElectiveGroup.for_batch(@batch.id)
   end
 
   def new
